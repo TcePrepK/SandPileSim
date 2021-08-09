@@ -3,16 +3,28 @@
 #include <vector>
 #include <thread>
 
-// #include <iostream>
+#include <iostream>
 using namespace std;
 
 #include "./src/utils/variables.cpp"
-#include "./src/utils/ids.cpp"
+#include "./maths.cpp"
 
-#include "maths.cpp"
-#include "renderer.cpp"
-#include "materials.cpp"
-#include "updates.cpp"
+// TODO: Remove this
+#include "./src/elements/element.cpp"
+
+// IDs
+#define mat_id_empty 0
+#define mat_id_sand 1
+#define mat_id_water 2
+#define mat_id_stone 3
+// TODO: Remove this
+
+#include "./renderer.cpp"
+#include "./materials.cpp"
+
+#include "./src/elementRegistry.cpp"
+
+#include "./updates.cpp"
 
 static s32 testForGUIs();
 
@@ -49,7 +61,7 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		s32 guiH = 50;
 		s32 guiOff = 10;
 
-		gui_t materials[] = {create_gui(mat_id_sand), create_gui(mat_id_water), create_gui(mat_id_brick)};
+		gui_t materials[] = {create_gui(mat_id_sand), create_gui(mat_id_water), create_gui(mat_id_stone)};
 		for (s32 i = 0; i < globalVariables.totalParticleTypes; i++)
 		{
 			s32 x0 = globalVariables.screenWidth - (guiW + guiOff);
@@ -148,7 +160,7 @@ s32 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, s32 n
 	HDC hdc = GetDC(window);
 
 	// Create World Buffer
-	s32 world_buffer_size = globalVariables.worldSize * sizeof(particle_t);
+	s32 world_buffer_size = globalVariables.worldSize * sizeof(Element);
 	globalVariables.worldBuffer = VirtualAlloc(0, world_buffer_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	fillWorld(mat_id_empty);
 
@@ -176,7 +188,7 @@ s32 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, s32 n
 		if (globalVariables.holdingLeft)
 		{
 			POINT tile = mouseToTile(globalVariables.mouse);
-			if (globalVariables.currentMatID != mat_id_brick)
+			if (globalVariables.currentMatID != mat_id_stone)
 			{
 				if (globalVariables.currentFrame % 6 == 0)
 				{

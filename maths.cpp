@@ -1,3 +1,6 @@
+#ifndef MATHS_CPP
+#define MATHS_CPP
+
 static f32 lerp(f32 v0, f32 v1, f32 t)
 {
     return (1.f - t) * v0 + t * v1;
@@ -43,3 +46,5 @@ static s32 _idxC(s32 x, s32 y)
 {
     return x + y * globalVariables.chunkAmount;
 }
+
+#endif // MATHS_CPP

@@ -9,6 +9,16 @@ static POINT simulateWater(s32 x, s32 y, s32 id);
 static POINT updateSand(s32 x, s32 y);
 static POINT updateWater(s32 x, s32 y);
 
+// World Shaping
+static void placeParticle(s32 x, s32 y, s32 id);
+static void placeCircleParticle(s32 x, s32 y, s32 r, s32 id, b32 random);
+
+// Particles
+static Element create_particle(s32 id);
+
+// GUIs
+static gui_t create_gui(s32 id);
+
 //////////////////////////////////////////////
 
 static void prepareBoard()
@@ -18,7 +28,7 @@ static void prepareBoard()
     {
         for (s32 j = 0; j < w; j++)
         {
-            particle_t *p = getDataPointer(_idx(i, j));
+            Element *p = getDataPointer(_idx(i, j));
             p->updatedThisFrame = 0;
         }
     }
@@ -31,7 +41,7 @@ static void renderBoard()
     {
         for (s32 j = 0; j < w; j++)
         {
-            particle_t *p = getDataPointer(_idx(i, j));
+            Element *p = getDataPointer(_idx(i, j));
             fillPixel(i, j, p->color);
         }
     }
@@ -109,22 +119,25 @@ static void updateBoard()
 
 static POINT updatePixel(s32 x, s32 y)
 {
-    particle_t *p = getDataPointer(_idx(x, y));
+    Element *p = getDataPointer(_idx(x, y));
     s32 id = p->id;
 
     if (id == mat_id_empty || p->updatedThisFrame || !isDynamic(id))
         return {x, y};
     p->updatedThisFrame = 1;
 
-    switch (id)
-    {
-    case mat_id_sand:
-        return updateSand(x, y);
-    case mat_id_water:
-        return updateWater(x, y);
-    default:
-        return {x, y};
-    }
+    return p->update(x, y);
+    // return p->update(x, y);
+
+    // switch (id)
+    // {
+    // case mat_id_sand:
+    //     return updateSand(x, y);
+    // case mat_id_water:
+    //     return updateWater(x, y);
+    // default:
+    //     return {x, y};
+    // }
 }
 
 //////////////////////////////////////////////
@@ -282,4 +295,83 @@ static POINT updateWater(s32 x, s32 y)
     POINT lastPos = {x + currentSpread, y + currentFall};
     swapData(pos, lastPos);
     return lastPos;
+}
+
+static Element create_particle(s32 id)
+{
+    switch (id)
+    {
+    case mat_id_sand:
+        return Sand();
+    case mat_id_water:
+        return Water();
+    case mat_id_stone:
+        return Stone();
+    default:
+        return Element();
+    }
+}
+
+static void placeParticle(s32 x, s32 y, s32 id)
+{
+    if (!isMoveFree(x, y, id))
+        return;
+    setData(x, y, create_particle(id));
+    if (!isDynamic(id))
+        return;
+
+    chunk_t *chunk = getChunkPointerWithTiles(x, y);
+    resetChunk(x, y, 1);
+}
+
+static void placeCircleParticle(s32 x, s32 y, s32 r, s32 id, b32 random)
+{
+    s32 sqrR = r * r;
+    if (random)
+    {
+        for (s32 i = 0; i < sqrR; i++)
+        {
+            s32 offX = randomVal(-r, r);
+            s32 offY = randomVal(-r, r);
+
+            s32 sqrLen = offX * offX + offY * offY;
+            if (sqrLen > sqrR)
+                continue;
+            placeParticle(x + offX, y + offY, id);
+        }
+    }
+    else
+    {
+        for (s32 offX = 0; offX < r; offX++)
+        {
+            for (s32 offY = 0; offY < r; offY++)
+            {
+                s32 sqrLen = offX * offX + offY * offY;
+                if (sqrLen > sqrR)
+                    continue;
+                placeParticle(x + offX, y + offY, id);
+            }
+        }
+    }
+}
+
+static void fillWorld(s32 id)
+{
+    for (s32 i = 0; i < globalVariables.gridAmount; i++)
+    {
+        for (s32 j = 0; j < globalVariables.gridAmount; j++)
+        {
+            setData(i, j, create_particle(id));
+        }
+    }
+}
+
+// GUI
+static gui_t create_gui(s32 id)
+{
+    gui_t g = {};
+    Element p = create_particle(id);
+    g.id = p.id;
+    g.color = p.color;
+    return g;
 }

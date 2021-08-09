@@ -6,15 +6,17 @@
     "configurations": [
         {
             "name": "cl.exe - Build and debug active file",
-            "type": "cppvsdbg",
+            "type": "cppdbg",
             "request": "launch",
             "program": "${fileDirname}\\${fileBasenameNoExtension}.exe",
             "args": [],
-            "stopAtEntry": false,
+            "stopAtEntry": true,
             "cwd": "${workspaceFolder}",
             "environment": [],
             "console": "externalTerminal",
-            "preLaunchTask": "C/C++: g++.exe build active file"
+            "MIMode": "lldb",
+            "preLaunchTask": "C/C++: g++.exe build active file",
+            "miDebuggerPath": "gdb.exe"
         }
     ]
 }

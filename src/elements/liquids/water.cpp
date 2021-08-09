@@ -1,23 +1,25 @@
-class Sand : public Solid
+class Water : public Liquid
 {
 public:
-    Sand() : Solid(mat_id_sand, getColor()) {}
+    Water() : Liquid(mat_id_water, getColor()) {}
 
     u32 getColor()
     {
-        f32 r = (f32)(randomVal(0, 10)) / 10.f;
-        s32 red = (s32)(lerp(0.8f, 1.f, r) * 255.f);
-        s32 green = (s32)(lerp(0.5f, 0.6f, r) * 255.f);
-        s32 blue = (s32)(lerp(0.2f, 0.25f, r) * 255.f);
+        f32 r = (f32)(randomVal(0, 1)) / 2.f;
+        s32 red = (s32)(lerp(0.1f, 0.15f, r) * 255.f);
+        s32 green = (s32)(lerp(0.3f, 0.35f, r) * 255.f);
+        s32 blue = (s32)(lerp(0.7f, 0.8f, r) * 255.f);
         s32 alpha = 255;
         return rgbaToHex(red, green, blue, alpha);
     }
 
-    POINT simulateSand(s32 x, s32 y, s32 id)
+    POINT simulateWater(s32 x, s32 y, s32 id)
     {
         s32 dir = randomVal(0, 1) ? 1 : -1;
         POINT pos = {x, y};
         POINT B = {x, y + 1};
+        POINT L = {x + dir, y};
+        POINT R = {x - dir, y};
         POINT BL = {x + dir, y + 1};
         POINT BR = {x - dir, y + 1};
         if (isMoveFree(B, id))
@@ -32,24 +34,30 @@ public:
         {
             return BR;
         }
+        else if (isMoveFree(L, id))
+        {
+            return L;
+        }
+        else if (isMoveFree(R, id))
+        {
+            return R;
+        }
 
         return pos;
     }
 
     // POINT update(s32 x, s32 y)
     // {
-    //     cout << "Updating Sand";
-    //     s32 id = mat_id_sand;
-    //     if (isSurrounded(x, y, id))
-    //         return {x, y}; // It can't move
-
-    //     s32 fallRate = 4;   // 4
-    //     s32 spreadRate = 5; // 5
+    //     s32 id = mat_id_water;
+    //     s32 fallRate = 1;   // 5
+    //     s32 spreadRate = 1; // 50
 
     //     s32 currentFall = 0;
     //     s32 currentSpread = 0;
 
     //     POINT pos = {x, y};
+    //     if (isSurrounded(x, y, id))
+    //         return {x, y}; // It can't move
 
     //     for (s32 j = 1; j <= fallRate; j++)
     //     {
@@ -70,7 +78,7 @@ public:
     //     s32 currentLoop = 0;
     //     while (currentLoop++ < spreadRate + fallRate)
     //     {
-    //         POINT nextP = simulateSand(currentP.x, currentP.y, id);
+    //         POINT nextP = simulateWater(currentP.x, currentP.y, id);
     //         currentSpread = nextP.x - x;
     //         currentFall = nextP.y - y;
 
@@ -82,8 +90,8 @@ public:
     //         currentP = nextP;
     //     }
 
-    //     POINT lastP = {x + currentSpread, y + currentFall};
-    //     swapData(pos, lastP);
-    //     return lastP;
+    //     POINT lastPos = {x + currentSpread, y + currentFall};
+    //     swapData(pos, lastPos);
+    //     return lastPos;
     // }
 };
