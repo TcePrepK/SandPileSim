@@ -1,9 +1,3 @@
-// IDs
-#define mat_id_empty (s32)0
-#define mat_id_sand (s32)1
-#define mat_id_water (s32)2
-#define mat_id_brick (s32)3
-
 // World Testing
 static b32 inBounds(s32 x, s32 y);
 static b32 isAir(s32 x, s32 y);

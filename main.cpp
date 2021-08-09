@@ -1,18 +1,18 @@
 #include <tchar.h>
 #include <windows.h>
-#include <iostream>
 #include <vector>
 #include <thread>
+
+// #include <iostream>
 using namespace std;
 
-#include "utils.cpp"
+#include "./src/utils/variables.cpp"
+#include "./src/utils/ids.cpp"
+
 #include "maths.cpp"
 #include "renderer.cpp"
 #include "materials.cpp"
 #include "updates.cpp"
-
-// Classes
-#include "src/elements/element.cpp";
 
 static s32 testForGUIs();
 
