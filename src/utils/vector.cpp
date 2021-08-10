@@ -1,10 +1,6 @@
 #ifndef VECTOR_CPP
 #define VECTOR_CPP
 
-#include <math.h>
-
-#include "./types.cpp"
-
 class Vector
 {
 public:

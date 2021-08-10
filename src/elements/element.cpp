@@ -4,23 +4,15 @@
 class Element
 {
 public:
-    u32 id = 0;
-    u32 color = 0;
+    u32 id;
+    u32 color;
     b32 updatedThisFrame = false;
 
     Vector vel;
 
-    Element()
-    {
-        this->id = 0;
-        this->color = 0x000000;
-    }
+    Element() : id(0), color(0) {}
 
-    Element(u32 id, u32 color)
-    {
-        this->id = id;
-        this->color = color;
-    }
+    Element(u32 id, u32 color) : id(id), color(color) {}
 
     virtual u32 getColor()
     {

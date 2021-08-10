@@ -1,8 +1,6 @@
 #ifndef TYPES_CPP
 #define TYPES_CPP
 
-#include <windows.h>
-
 typedef char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -33,15 +31,6 @@ typedef struct chunk_t
     RECT dirtyRect;
     u32 particleAmount = 0;
 } chunk_t;
-
-typedef struct particle_t
-{
-    s32 id;
-    // f32 life_time;
-    // vec_t vel;
-    u32 color;
-    b32 updatedThisFrame;
-} particle_t;
 
 typedef struct particle_shower
 {

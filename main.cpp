@@ -1,12 +1,7 @@
-#include <tchar.h>
-#include <windows.h>
-#include <vector>
-#include <thread>
-
-#include <iostream>
-using namespace std;
-
 #include "./src/utils/utils.cpp"
+
+#include "./src/core/chunk.cpp"
+#include "./src/core/world.cpp"
 
 // TODO: Remove this
 #define mat_id_empty 0
@@ -145,6 +140,9 @@ s32 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, s32 n
 	window_class.style = CS_HREDRAW | CS_VREDRAW;
 	window_class.lpszClassName = _T("Game Window Class");
 	window_class.lpfnWndProc = window_callback;
+
+	World *world = new World();
+	world->getChunk(0, 0);
 
 	// Register Class
 	RegisterClass(&window_class);
