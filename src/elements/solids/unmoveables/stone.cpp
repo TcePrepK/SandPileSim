@@ -12,4 +12,10 @@ public:
         s32 alpha = 255;
         return rgbaToHex(red, green, blue, alpha);
     }
+
+    POINT update(s32 x, s32 y)
+    {
+        cout << "Updating Sand";
+        return {x, y};
+    }
 };

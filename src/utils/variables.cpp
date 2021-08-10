@@ -1,10 +1,6 @@
 #ifndef VARIABLES_CPP
 #define VARIABLES_CPP
 
-#include <windows.h>
-
-#include "./types.cpp"
-
 static struct globalVariables
 {
     b32 gameIsRunning = true;
@@ -12,12 +8,11 @@ static struct globalVariables
     s32 screenWidth = 0;
     s32 screenHeight = 0;
 
-    s32 gridAmount = 256;
-
     s32 chunkSize = 64;
     s32 chunkAmount = gridAmount / chunkSize;
 
-    s32 worldSize = gridAmount * gridAmount;
+    const static s32 gridAmount = 256;
+    const static s32 worldSize = gridAmount * gridAmount;
 
     s32 totalChunkSize = chunkAmount * chunkAmount;
     chunk_t *chunks = new chunk_t[totalChunkSize];
@@ -30,6 +25,8 @@ static struct globalVariables
     b32 holdingLeft = false;
 
     particle_shower shower;
+
+    Element *grid[worldSize] = {};
 
     void *worldBuffer;
     void *memory;

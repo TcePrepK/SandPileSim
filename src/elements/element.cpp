@@ -1,9 +1,6 @@
 #ifndef ELEMENT_CPP
 #define ELEMENT_CPP
 
-#include "../utils/vector.cpp"
-#include "../utils/types.cpp"
-
 class Element
 {
 public:
@@ -32,7 +29,7 @@ public:
 
     virtual POINT update(s32 x, s32 y)
     {
-        cout << "Updating Something";
+        cout << "Update default element";
         return {x, y};
     }
 };

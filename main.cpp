@@ -6,13 +6,9 @@
 #include <iostream>
 using namespace std;
 
-#include "./src/utils/variables.cpp"
-#include "./maths.cpp"
+#include "./src/utils/utils.cpp"
 
 // TODO: Remove this
-#include "./src/elements/element.cpp"
-
-// IDs
 #define mat_id_empty 0
 #define mat_id_sand 1
 #define mat_id_water 2
@@ -160,8 +156,8 @@ s32 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, s32 n
 	HDC hdc = GetDC(window);
 
 	// Create World Buffer
-	s32 world_buffer_size = globalVariables.worldSize * sizeof(Element);
-	globalVariables.worldBuffer = VirtualAlloc(0, world_buffer_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
+	// s32 world_buffer_size = globalVariables.worldSize * sizeof(Element);
+	// globalVariables.worldBuffer = VirtualAlloc(0, world_buffer_size, MEM_COMMIT | MEM_RESERVE, PAGE_READWRITE);
 	fillWorld(mat_id_empty);
 
 	POINT point = {};

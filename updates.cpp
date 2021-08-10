@@ -2,19 +2,12 @@ static void prepareBoard();
 static void updateBoard();
 static POINT updatePixel(s32 x, s32 y);
 
-// Updates
-static POINT simulateSand(s32 x, s32 y, s32 id);
-static POINT simulateWater(s32 x, s32 y, s32 id);
-
-static POINT updateSand(s32 x, s32 y);
-static POINT updateWater(s32 x, s32 y);
-
 // World Shaping
 static void placeParticle(s32 x, s32 y, s32 id);
 static void placeCircleParticle(s32 x, s32 y, s32 r, s32 id, b32 random);
 
 // Particles
-static Element create_particle(s32 id);
+static Element *create_particle(s32 id);
 
 // GUIs
 static gui_t create_gui(s32 id);
@@ -127,188 +120,22 @@ static POINT updatePixel(s32 x, s32 y)
     p->updatedThisFrame = 1;
 
     return p->update(x, y);
-    // return p->update(x, y);
-
-    // switch (id)
-    // {
-    // case mat_id_sand:
-    //     return updateSand(x, y);
-    // case mat_id_water:
-    //     return updateWater(x, y);
-    // default:
-    //     return {x, y};
-    // }
 }
 
 //////////////////////////////////////////////
 
-static POINT simulateSand(s32 x, s32 y, s32 id)
-{
-    s32 dir = randomVal(0, 1) ? 1 : -1;
-    POINT pos = {x, y};
-    POINT B = {x, y + 1};
-    POINT BL = {x + dir, y + 1};
-    POINT BR = {x - dir, y + 1};
-    if (isMoveFree(B, id))
-    {
-        return B;
-    }
-    else if (isMoveFree(BL, id))
-    {
-        return BL;
-    }
-    else if (isMoveFree(BR, id))
-    {
-        return BR;
-    }
-
-    return pos;
-}
-
-static POINT simulateWater(s32 x, s32 y, s32 id)
-{
-    s32 dir = randomVal(0, 1) ? 1 : -1;
-    POINT pos = {x, y};
-    POINT B = {x, y + 1};
-    POINT L = {x + dir, y};
-    POINT R = {x - dir, y};
-    POINT BL = {x + dir, y + 1};
-    POINT BR = {x - dir, y + 1};
-    if (isMoveFree(B, id))
-    {
-        return B;
-    }
-    else if (isMoveFree(BL, id))
-    {
-        return BL;
-    }
-    else if (isMoveFree(BR, id))
-    {
-        return BR;
-    }
-    else if (isMoveFree(L, id))
-    {
-        return L;
-    }
-    else if (isMoveFree(R, id))
-    {
-        return R;
-    }
-
-    return pos;
-}
-
-static POINT updateSand(s32 x, s32 y)
-{
-    s32 id = mat_id_sand;
-    if (isSurrounded(x, y, id))
-        return {x, y}; // It can't move
-
-    s32 fallRate = 4;   // 4
-    s32 spreadRate = 5; // 5
-
-    s32 currentFall = 0;
-    s32 currentSpread = 0;
-
-    POINT pos = {x, y};
-
-    for (s32 j = 1; j <= fallRate; j++)
-    {
-        POINT B = {x, y + j};
-        if (!isAir(B))
-            break;
-        currentFall = j;
-    }
-
-    if (currentFall == fallRate)
-    {
-        POINT g = {x, y + fallRate};
-        swapData(pos, g);
-        return g;
-    }
-
-    POINT currentP = {x, y + currentFall};
-    s32 currentLoop = 0;
-    while (currentLoop++ < spreadRate + fallRate)
-    {
-        POINT nextP = simulateSand(currentP.x, currentP.y, id);
-        currentSpread = nextP.x - x;
-        currentFall = nextP.y - y;
-
-        if ((nextP.x == currentP.x && nextP.y == currentP.y) || abs(currentSpread) > spreadRate || currentFall > fallRate)
-        {
-            swapData(pos, currentP);
-            return currentP;
-        }
-        currentP = nextP;
-    }
-
-    POINT lastP = {x + currentSpread, y + currentFall};
-    swapData(pos, lastP);
-    return lastP;
-}
-
-static POINT updateWater(s32 x, s32 y)
-{
-    s32 id = mat_id_water;
-    s32 fallRate = 1;   // 5
-    s32 spreadRate = 1; // 50
-
-    s32 currentFall = 0;
-    s32 currentSpread = 0;
-
-    POINT pos = {x, y};
-    if (isSurrounded(x, y, id))
-        return {x, y}; // It can't move
-
-    for (s32 j = 1; j <= fallRate; j++)
-    {
-        POINT B = {x, y + j};
-        if (!isAir(B))
-            break;
-        currentFall = j;
-    }
-
-    if (currentFall == fallRate)
-    {
-        POINT g = {x, y + fallRate};
-        swapData(pos, g);
-        return g;
-    }
-
-    POINT currentP = {x, y + currentFall};
-    s32 currentLoop = 0;
-    while (currentLoop++ < spreadRate + fallRate)
-    {
-        POINT nextP = simulateWater(currentP.x, currentP.y, id);
-        currentSpread = nextP.x - x;
-        currentFall = nextP.y - y;
-
-        if ((nextP.x == currentP.x && nextP.y == currentP.y) || abs(currentSpread) > spreadRate || currentFall > fallRate)
-        {
-            swapData(pos, currentP);
-            return currentP;
-        }
-        currentP = nextP;
-    }
-
-    POINT lastPos = {x + currentSpread, y + currentFall};
-    swapData(pos, lastPos);
-    return lastPos;
-}
-
-static Element create_particle(s32 id)
+static Element *create_particle(s32 id)
 {
     switch (id)
     {
     case mat_id_sand:
-        return Sand();
+        return new Sand();
     case mat_id_water:
-        return Water();
+        return new Water();
     case mat_id_stone:
-        return Stone();
+        return new Stone();
     default:
-        return Element();
+        return new Element();
     }
 }
 
@@ -370,8 +197,8 @@ static void fillWorld(s32 id)
 static gui_t create_gui(s32 id)
 {
     gui_t g = {};
-    Element p = create_particle(id);
-    g.id = p.id;
-    g.color = p.color;
+    Element *p = create_particle(id);
+    g.id = p->id;
+    g.color = p->color;
     return g;
 }

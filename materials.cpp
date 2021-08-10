@@ -9,8 +9,8 @@ static b32 isMoveFree(s32 x, s32 y, s32 id);
 static b32 isMoveFree(POINT p, s32 id);
 
 // Data Manipulation
-static void setData(s32 idx, Element p);
-static void setData(s32 x, s32 y, Element p);
+static void setData(s32 idx, Element *p);
+static void setData(s32 x, s32 y, Element *p);
 static Element *getDataPointer(s32 idx);
 static Element getData(s32 idx);
 static chunk_t *getChunkPointer(s32 idx);
@@ -85,23 +85,26 @@ static b32 isSurrounded(s32 x, s32 y, s32 id)
     return (!isAir(x + 1, y) && !isAir(x - 1, y) && !isAir(x, y + 1));
 }
 
-static void setData(s32 idx, Element p)
+static void setData(s32 idx, Element *p)
 {
-    Element *particle = (Element *)globalVariables.worldBuffer + idx;
-    *particle = p;
-    fillPixel(idx, p.color);
+    // Element *particle = (Element *)globalVariables.worldBuffer + idx;
+    // *particle = p;
+    globalVariables.grid[idx] = p;
+    fillPixel(idx, p->color);
 }
 
-static void setData(s32 x, s32 y, Element p)
+static void setData(s32 x, s32 y, Element *p)
 {
     s32 idx = _idx(x, y);
 
-    Element *particle = (Element *)globalVariables.worldBuffer + idx;
-    *particle = p;
-    fillPixel(idx, p.color);
+    globalVariables.grid[idx] = p;
+
+    // Element *particle = (Element *)globalVariables.worldBuffer + idx;
+    // *particle = p;
+    fillPixel(idx, p->color);
 
     chunk_t *chunk = getChunkPointerWithTiles(x, y);
-    if (p.id == mat_id_empty)
+    if (p->id == mat_id_empty)
     {
         if (chunk->particleAmount > 0)
         {
@@ -121,7 +124,7 @@ static void setData(s32 x, s32 y, Element p)
 
 static Element *getDataPointer(s32 idx)
 {
-    return (Element *)globalVariables.worldBuffer + idx;
+    return globalVariables.grid[idx];
 }
 
 static Element getData(s32 idx)
@@ -175,8 +178,8 @@ static b32 swapData(POINT from, POINT to)
     s32 idx1 = _idx(from);
     s32 idx2 = _idx(to);
 
-    Element particle1 = getData(idx1);
-    Element particle2 = getData(idx2);
+    Element *particle1 = getDataPointer(idx1);
+    Element *particle2 = getDataPointer(idx2);
 
     chunk_t *chunk1 = getChunkPointerWithTiles(from.x, from.y);
     chunk_t *chunk2 = getChunkPointerWithTiles(to.x, to.y);
@@ -187,7 +190,7 @@ static b32 swapData(POINT from, POINT to)
     if (chunk1 == chunk2)
         return 1;
 
-    if (particle1.id == mat_id_empty && particle2.id == mat_id_empty)
+    if (particle1->id == mat_id_empty && particle2->id == mat_id_empty)
         return 1;
 
     RECT dirty = chunk2->dirtyRect;
@@ -205,4 +208,27 @@ static b32 swapData(POINT from, POINT to)
     chunk2->dirtyRect = {left, top, right, bottom};
 
     return 1;
+}
+
+static POINT simulateSand(s32 x, s32 y, s32 id)
+{
+    s32 dir = randomVal(0, 1) ? 1 : -1;
+    POINT pos = {x, y};
+    POINT B = {x, y + 1};
+    POINT BL = {x + dir, y + 1};
+    POINT BR = {x - dir, y + 1};
+    if (isMoveFree(B, id))
+    {
+        return B;
+    }
+    else if (isMoveFree(BL, id))
+    {
+        return BL;
+    }
+    else if (isMoveFree(BR, id))
+    {
+        return BR;
+    }
+
+    return pos;
 }
