@@ -32,19 +32,4 @@ static s32 randomVal(s32 lower, s32 upper)
     return (rand() % (upper - lower + 1) + lower);
 }
 
-static s32 _idx(s32 x, s32 y)
-{
-    return x + y * globalVariables.gridAmount;
-}
-
-static s32 _idx(POINT p)
-{
-    return p.x + p.y * globalVariables.gridAmount;
-}
-
-static s32 _idxC(s32 x, s32 y)
-{
-    return x + y * globalVariables.chunkAmount;
-}
-
 #endif // MATHS_CPP

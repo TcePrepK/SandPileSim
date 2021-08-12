@@ -12,26 +12,6 @@ typedef unsigned int u32;
 typedef long long s64;
 typedef unsigned long long u64;
 
-typedef struct vec_t
-{
-    f32 x = 0;
-    f32 y = 0;
-} vec_t;
-
-typedef struct gui_t
-{
-    s32 id = 0;
-    u32 color = 0x000000;
-    RECT rect;
-} gui_t;
-
-typedef struct chunk_t
-{
-    RECT bounds;
-    RECT dirtyRect;
-    u32 particleAmount = 0;
-} chunk_t;
-
 typedef struct particle_shower
 {
     s32 id = -1;
