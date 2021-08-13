@@ -13,8 +13,20 @@ public:
 
     void prepareUpdate()
     {
-        for (Chunk *chunk : chunkList)
+        for (s32 i = 0; i < chunkList.size(); i++)
         {
+            Chunk *chunk = chunkList.at(i);
+
+            if (chunk->filledPixelAmount == 0)
+            {
+                chunks.erase(chunk->name);
+                chunkList.erase(chunkList.begin() + i);
+                i--;
+
+                delete chunk;
+                continue;
+            }
+
             chunk->prepareUpdate();
         }
     }
@@ -22,11 +34,12 @@ public:
     void update()
     {
         prepareUpdate();
+        b32 reverse = globalVariables.currentFrame % 2;
         for (Chunk *chunk : chunkList)
         {
-            for (s32 offX = 0; offX < chunkWidth; offX++)
+            for (s32 offX = reverse ? 0 : chunkWidth - 1; reverse ? offX < chunkWidth : offX >= 0; reverse ? offX++ : offX--)
             {
-                for (s32 offY = 0; offY < chunkHeight; offY++)
+                for (s32 offY = reverse ? 0 : chunkHeight - 1; reverse ? offY < chunkHeight : offY >= 0; reverse ? offY++ : offY--)
                 {
                     s32 x = chunk->tileX + offX;
                     s32 y = chunk->tileY + offY;
@@ -67,18 +80,18 @@ public:
 
     Chunk *getChunk(s32 x, s32 y)
     {
-        string key = to_string(x) + "|" + to_string(y);
-        if (chunks.find(key) == chunks.end())
+        string name = to_string(x) + "|" + to_string(y);
+        if (chunks.find(name) == chunks.end())
         {
-            Chunk *c = new Chunk(x, y, chunkWidth, chunkHeight);
+            Chunk *c = new Chunk(x, y, chunkWidth, chunkHeight, name);
 
-            chunks[key] = c;
+            chunks[name] = c;
             chunkList.push_back(c);
 
             return c;
         }
 
-        return chunks[key];
+        return chunks[name];
     }
 
     Chunk *getChunkWithTiles(s32 x, s32 y)
@@ -125,9 +138,9 @@ public:
     void setCirclePixel(s32 x, s32 y, s32 r, Element *e)
     {
         s32 sqrR = r * r;
-        for (s32 offX = 0; offX < r; offX++)
+        for (s32 offX = -r; offX < r; offX++)
         {
-            for (s32 offY = 0; offY < r; offY++)
+            for (s32 offY = -r; offY < r; offY++)
             {
                 s32 sqrLen = offX * offX + offY * offY;
                 if (sqrLen > sqrR)

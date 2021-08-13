@@ -53,12 +53,10 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		s32 id = testForGUIs();
 		if (id != -1)
 		{
-			cout << "GUI: " << id << endl;
 			globalVariables.currentMatID = id;
 		}
 		else
 		{
-			cout << "No GUI" << endl;
 			globalVariables.holdingLeft = true;
 		}
 	}
@@ -150,7 +148,7 @@ s32 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, s32 n
 			s32 id = globalVariables.currentMatID;
 			if (id != STONE)
 			{
-				if (globalVariables.currentFrame % 6 == 0)
+				if (globalVariables.currentFrame % 10 == 0)
 				{
 					sandWorld.setCirclePixel(tile.x, tile.y, 10, create_particle(id));
 				}

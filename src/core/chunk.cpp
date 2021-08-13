@@ -6,12 +6,13 @@ class Chunk
 public:
     s32 x, y, tileX, tileY;
     s32 width, height;
+    string name;
 
     s32 filledPixelAmount = 0;
 
     Element **grid;
 
-    Chunk(s32 x, s32 y, s32 width, s32 height) : x(x), y(y), tileX(x * width), tileY(y * height), width(width), height(height)
+    Chunk(s32 x, s32 y, s32 width, s32 height, string name) : x(x), y(y), tileX(x * width), tileY(y * height), width(width), height(height), name(name)
     {
         grid = new Element *[width * height] {};
     }
@@ -58,7 +59,7 @@ public:
         }
         else
         {
-            fillRect(tileX, tileY, width, height, 0xff0000);
+            strokeRect(tileX, tileY, width, height, 0x0000000);
         }
     }
 
@@ -75,11 +76,11 @@ public:
 
         grid[x + y * width] = element;
 
-        if (element != nullptr && (dest == nullptr || !element->isDynamic()))
+        if (element != nullptr && dest == nullptr)
         {
             filledPixelAmount++;
         }
-        else if (dest == nullptr && (element == nullptr || !element->isDynamic()))
+        else if (dest != nullptr && element == nullptr)
         {
             filledPixelAmount--;
         }

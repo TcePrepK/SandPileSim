@@ -43,7 +43,6 @@ void generateGUI(Element *e)
 s32 testForGUIs()
 {
     Vector m = globalVariables.mouse;
-    cout << bounds.left << " " << bounds.top << " " << bounds.right << " " << bounds.bottom << endl;
     if (m.x < bounds.left || m.x > bounds.right || m.y < bounds.top || m.y > bounds.bottom)
         return -1;
 
