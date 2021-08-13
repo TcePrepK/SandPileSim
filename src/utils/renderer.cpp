@@ -7,7 +7,7 @@ void strokeRect(s32 x, s32 y, s32 w, s32 h, u32 color);
 
 void fillELement(s32 x, s32 y, u32 color);
 
-POINT mouseToTile(s32 x, s32 y);
+Vector mouseToTile(s32 x, s32 y);
 b32 inBounds(s32 x, s32 y);
 
 s32 scaleX = 1;
@@ -130,18 +130,12 @@ void fillElement(s32 x, s32 y, u32 color)
     }
 }
 
-POINT mouseToTile(POINT pos32)
+Vector mouseToTile(Vector pos32)
 {
-    POINT final = {};
+    Vector final = {};
 
     s32 x = pos32.x;
     s32 y = pos32.y;
-
-    s32 w = globalVariables.screenWidth;
-    s32 h = globalVariables.screenHeight;
-
-    x = clamp(x, 0, w);
-    y = clamp(y, 0, h);
 
     final.x = x / scaleX;
     final.y = y / scaleY;

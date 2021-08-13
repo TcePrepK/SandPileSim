@@ -1,7 +1,9 @@
+#define WATER 2
+
 class Water : public Liquid
 {
 public:
-    Water() : Liquid(mat_id_water, getColor()) {}
+    Water() : Liquid(WATER, getColor()) {}
 
     u32 getColor()
     {
@@ -13,15 +15,17 @@ public:
         return rgbaToHex(red, green, blue, alpha);
     }
 
-    // POINT simulateWater(s32 x, s32 y, s32 id)
+    Element *clone() { return new Water(); }
+
+    // Vector simulateWater(s32 x, s32 y, s32 id)
     // {
     //     s32 dir = randomVal(0, 1) ? 1 : -1;
-    //     POINT pos = {x, y};
-    //     POINT B = {x, y + 1};
-    //     POINT L = {x + dir, y};
-    //     POINT R = {x - dir, y};
-    //     POINT BL = {x + dir, y + 1};
-    //     POINT BR = {x - dir, y + 1};
+    //     Vector pos = {x, y};
+    //     Vector B = {x, y + 1};
+    //     Vector L = {x + dir, y};
+    //     Vector R = {x - dir, y};
+    //     Vector BL = {x + dir, y + 1};
+    //     Vector BR = {x - dir, y + 1};
     //     if (isMoveFree(B, id))
     //     {
     //         return B;
@@ -46,7 +50,7 @@ public:
     //     return pos;
     // }
 
-    // POINT update(s32 x, s32 y)
+    // Vector update(s32 x, s32 y)
     // {
     //     s32 id = mat_id_water;
     //     s32 fallRate = 1;   // 5
@@ -55,13 +59,13 @@ public:
     //     s32 currentFall = 0;
     //     s32 currentSpread = 0;
 
-    //     POINT pos = {x, y};
+    //     Vector pos = {x, y};
     //     if (isSurrounded(x, y, id))
     //         return {x, y}; // It can't move
 
     //     for (s32 j = 1; j <= fallRate; j++)
     //     {
-    //         POINT B = {x, y + j};
+    //         Vector B = {x, y + j};
     //         if (!isAir(B))
     //             break;
     //         currentFall = j;
@@ -69,16 +73,16 @@ public:
 
     //     if (currentFall == fallRate)
     //     {
-    //         POINT g = {x, y + fallRate};
+    //         Vector g = {x, y + fallRate};
     //         swapData(pos, g);
     //         return g;
     //     }
 
-    //     POINT currentP = {x, y + currentFall};
+    //     Vector currentP = {x, y + currentFall};
     //     s32 currentLoop = 0;
     //     while (currentLoop++ < spreadRate + fallRate)
     //     {
-    //         POINT nextP = simulateWater(currentP.x, currentP.y, id);
+    //         Vector nextP = simulateWater(currentP.x, currentP.y, id);
     //         currentSpread = nextP.x - x;
     //         currentFall = nextP.y - y;
 
@@ -90,7 +94,7 @@ public:
     //         currentP = nextP;
     //     }
 
-    //     POINT lastPos = {x + currentSpread, y + currentFall};
+    //     Vector lastPos = {x + currentSpread, y + currentFall};
     //     swapData(pos, lastPos);
     //     return lastPos;
     // }

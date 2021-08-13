@@ -13,8 +13,7 @@ public:
 
     Chunk(s32 x, s32 y, s32 width, s32 height) : x(x), y(y), tileX(x * width), tileY(y * height), width(width), height(height)
     {
-        grid = new Element *[width * height]
-        { nullptr };
+        grid = new Element *[width * height] {};
     }
 
     ~Chunk()
@@ -29,7 +28,7 @@ public:
             for (s32 j = 0; j < height; j++)
             {
                 Element *e = getPixel(i, j);
-                if (e->id != mat_id_empty)
+                if (e != nullptr)
                 {
                     e->updatedThisFrame = false;
                 }
@@ -44,26 +43,30 @@ public:
             for (s32 j = 0; j < height; j++)
             {
                 Element *e = getPixel(i, j);
-                u32 color = e->color;
+
+                u32 color = 0x000000;
+                if (e != nullptr)
+                    color = e->color;
 
                 fillElement(i + tileX, j + tileY, color);
             }
         }
 
-        strokeRect(tileX, tileY, width, height, 0xff0000);
+        if (filledPixelAmount > 0)
+        {
+            strokeRect(tileX, tileY, width, height, 0x00ff00);
+        }
+        else
+        {
+            fillRect(tileX, tileY, width, height, 0xff0000);
+        }
     }
 
     // HELPERS
 
     Element *getPixel(s32 x, s32 y)
     {
-        Element *e = grid[x + y * width];
-        if (e == nullptr)
-        {
-            e = new Element();
-            grid[x + y * width] = e;
-        }
-        return e;
+        return grid[x + y * width];
     }
 
     void setPixel(s32 x, s32 y, Element *element)
@@ -72,16 +75,14 @@ public:
 
         grid[x + y * width] = element;
 
-        if ((dest->id == mat_id_empty || !element->isDynamic()) && element->id != mat_id_empty)
+        if (element != nullptr && (dest == nullptr || !element->isDynamic()))
         {
             filledPixelAmount++;
         }
-        else if (dest->id != mat_id_empty && (element->id == mat_id_empty || !element->isDynamic()))
+        else if (dest == nullptr && (element == nullptr || !element->isDynamic()))
         {
             filledPixelAmount--;
         }
-
-        delete dest;
     }
 };
 

@@ -1,11 +1,4 @@
-// IDs
-#define mat_id_empty 0
-#define mat_id_sand 1
-#define mat_id_water 2
-#define mat_id_stone 3
-
-// Required Ones
-#include "./elements/element.cpp"
+// Types
 #include "./elements/solids/solid.cpp"
 #include "./elements/liquids/liquid.cpp"
 
@@ -23,11 +16,11 @@ Element *create_particle(s32 id)
 {
     switch (id)
     {
-    case mat_id_sand:
+    case SAND:
         return new Sand();
-    case mat_id_water:
+    case WATER:
         return new Water();
-    case mat_id_stone:
+    case STONE:
         return new Stone();
     default:
         return new Element();
@@ -37,17 +30,9 @@ Element *create_particle(s32 id)
 // GUIs
 void generateAllGUIs()
 {
-    Element *e;
+    generateGUI(new Sand());
+    generateGUI(new Water());
+    generateGUI(new Stone());
 
-    e = create_particle(SAND);
-    generateGUI(SAND, e->color);
-    delete e;
-
-    e = create_particle(mat_id_water);
-    generateGUI(mat_id_water, e->color);
-    delete e;
-
-    e = create_particle(mat_id_stone);
-    generateGUI(mat_id_stone, e->color);
-    delete e;
+    fixGUIs();
 }

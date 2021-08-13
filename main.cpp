@@ -18,10 +18,13 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	case WM_SIZE:
 	{
-		RECT rect = globalVariables.screenRect;
+		RECT rect = {};
+
 		GetClientRect(hwnd, &rect);
 		s32 width = (rect.right - rect.left);
 		s32 height = (rect.bottom - rect.top);
+
+		delete &rect;
 
 		globalVariables.screenWidth = width;
 		globalVariables.screenHeight = height;
@@ -50,10 +53,12 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 		s32 id = testForGUIs();
 		if (id != -1)
 		{
+			cout << "GUI: " << id << endl;
 			globalVariables.currentMatID = id;
 		}
 		else
 		{
+			cout << "No GUI" << endl;
 			globalVariables.holdingLeft = true;
 		}
 	}
@@ -67,10 +72,11 @@ LRESULT CALLBACK window_callback(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lPa
 
 	case WM_RBUTTONDOWN:
 	{
-		POINT tile = mouseToTile(globalVariables.mouse);
+		Vector tile = mouseToTile(globalVariables.mouse);
+		POINT p = {tile.x, tile.y};
 
 		globalVariables.shower.id = globalVariables.currentMatID;
-		globalVariables.shower.pos = tile;
+		globalVariables.shower.pos = p;
 	}
 	break;
 
@@ -123,25 +129,35 @@ s32 WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, s32 n
 			TranslateMessage(&message);
 			DispatchMessage(&message);
 
-			GetCursorPos(&globalVariables.mouse);
-			ScreenToClient(window, &globalVariables.mouse);
+			POINT p = {};
+			GetCursorPos(&p);
+			ScreenToClient(window, &p);
+
+			globalVariables.oldMouse.x = globalVariables.mouse.x;
+			globalVariables.oldMouse.y = globalVariables.mouse.y;
+
+			globalVariables.mouse.x = p.x;
+			globalVariables.mouse.y = p.y;
+
+			delete &p;
 		}
 
 		// Mouse Input
 		if (globalVariables.holdingLeft)
 		{
-			POINT tile = mouseToTile(globalVariables.mouse);
+			Vector oldTile = mouseToTile(globalVariables.oldMouse);
+			Vector tile = mouseToTile(globalVariables.mouse);
 			s32 id = globalVariables.currentMatID;
-			if (id != mat_id_stone)
+			if (id != STONE)
 			{
 				if (globalVariables.currentFrame % 6 == 0)
 				{
-					sandWorld.setCirclePixel(tile.x, tile.y, 10, create_particle(id), true);
+					sandWorld.setCirclePixel(tile.x, tile.y, 10, create_particle(id));
 				}
 			}
 			else
 			{
-				sandWorld.setCirclePixel(tile.x, tile.y, 2, create_particle(id), false);
+				sandWorld.setCircleLine(oldTile.x, oldTile.y, tile.x, tile.y, 2, create_particle(id));
 			}
 		}
 

@@ -4,11 +4,12 @@
 class World
 {
 public:
-    s32 chunkWidth, chunkHeight;
+    s32 chunkWidth = 64;
+    s32 chunkHeight = 64;
     unordered_map<string, Chunk *> chunks;
     vector<Chunk *> chunkList;
 
-    World(s32 chunkWidth, s32 chunkHeight) : chunkWidth(chunkWidth), chunkHeight(chunkHeight) {}
+    World() {}
 
     void prepareUpdate()
     {
@@ -23,23 +24,26 @@ public:
         prepareUpdate();
         for (Chunk *chunk : chunkList)
         {
-            for (s32 x = chunk->tileX; x < chunk->tileX + chunkWidth; x++)
+            for (s32 offX = 0; offX < chunkWidth; offX++)
             {
-                for (s32 y = chunk->tileY; y < chunk->tileY + chunkHeight; y++)
+                for (s32 offY = 0; offY < chunkHeight; offY++)
                 {
-                    Element *e = getPixel(x, y);
-                    if (e->updatedThisFrame || e->id == mat_id_empty)
+                    s32 x = chunk->tileX + offX;
+                    s32 y = chunk->tileY + offY;
+
+                    Element *e = chunk->getPixel(offX, offY);
+                    if (e == nullptr || e->updatedThisFrame)
                         continue;
 
                     e->updatedThisFrame = true;
 
-                    POINT newPos = e->update(x, y);
+                    Vector newPos = e->update(x, y);
 
                     if (newPos.x == x && newPos.y == y)
                         continue;
 
-                    chunk->setPixel(x % chunkWidth, y % chunkHeight, new Element());
                     setPixel(newPos.x, newPos.y, e);
+                    chunk->setPixel(offX, offY, nullptr);
                 }
             }
         }
@@ -54,7 +58,7 @@ public:
 
         for (GUI *gui : GUIs)
         {
-            RECT pos = gui->pos;
+            Rect pos = gui->pos;
             fillRectWithoutScale(pos.left, pos.top, pos.right - pos.left, pos.bottom - pos.top, gui->color);
         }
     }
@@ -70,6 +74,8 @@ public:
 
             chunks[key] = c;
             chunkList.push_back(c);
+
+            return c;
         }
 
         return chunks[key];
@@ -77,56 +83,105 @@ public:
 
     Chunk *getChunkWithTiles(s32 x, s32 y)
     {
-        Chunk *chunk = getChunk(x / chunkWidth, y / chunkHeight);
+        s32 ix = x / chunkWidth;
+        s32 iy = y / chunkHeight;
+
+        if (x < 0)
+            ix--;
+        if (y < 0)
+            iy--;
+
+        return getChunk(ix, iy);
     }
 
     Element *getPixel(s32 x, s32 y)
     {
-        return getChunkWithTiles(x, y)->getPixel(x % chunkWidth, y % chunkHeight);
+        Chunk *chunk = getChunkWithTiles(x, y);
+
+        x = x % chunkWidth;
+        y = y % chunkHeight;
+
+        if (x < 0)
+            x = chunkWidth - (abs(x) % chunkWidth);
+        if (y < 0)
+            y = chunkHeight - (abs(y) % chunkHeight);
+        return chunk->getPixel(x, y);
     }
 
     void setPixel(s32 x, s32 y, Element *element)
     {
-        getChunkWithTiles(x, y)->setPixel(x % chunkWidth, y % chunkHeight, element);
+        Chunk *chunk = getChunkWithTiles(x, y);
+
+        x = x % chunkWidth;
+        y = y % chunkHeight;
+
+        if (x < 0)
+            x = chunkWidth - (abs(x) % chunkWidth);
+        if (y < 0)
+            y = chunkHeight - (abs(y) % chunkHeight);
+        chunk->setPixel(x, y, element);
     }
 
-    void setCirclePixel(s32 x, s32 y, s32 r, Element *e, b32 random)
+    void setCirclePixel(s32 x, s32 y, s32 r, Element *e)
     {
         s32 sqrR = r * r;
-        if (random)
+        for (s32 offX = 0; offX < r; offX++)
         {
-            for (s32 i = 0; i < sqrR; i++)
+            for (s32 offY = 0; offY < r; offY++)
             {
-                s32 offX = randomVal(-r, r);
-                s32 offY = randomVal(-r, r);
-
                 s32 sqrLen = offX * offX + offY * offY;
                 if (sqrLen > sqrR)
                     continue;
-
-                Element *d = getPixel(x + offX, y + offY);
-                if (d->id != mat_id_empty)
-                    continue;
-
-                setPixel(x + offX, y + offY, e);
+                setPixel(x + offX, y + offY, e->clone());
             }
         }
-        else
+
+        delete e;
+    }
+
+    void setCircleLine(s32 fromX, s32 fromY, s32 toX, s32 toY, s32 r, Element *e)
+    {
+        if (toX < fromX)
         {
-            for (s32 offX = 0; offX < r; offX++)
-            {
-                for (s32 offY = 0; offY < r; offY++)
-                {
-                    s32 sqrLen = offX * offX + offY * offY;
-                    if (sqrLen > sqrR)
-                        continue;
-                    setPixel(x + offX, y + offY, e);
-                }
-            }
+            s32 temp = toX;
+            toX = fromX;
+            fromX = temp;
         }
+        if (toY < fromY)
+        {
+            s32 temp = toY;
+            toY = fromY;
+            fromY = temp;
+        }
+
+        s32 dx = toX - fromX;
+        s32 dy = toY - fromY;
+
+        if (dx == 0 && dy == 0)
+        {
+            setCirclePixel(fromX, fromY, r, e->clone());
+            return;
+        }
+
+        s32 step = (dx > dy) ? dx : dy;
+
+        s32 xin = dx / step;
+        s32 yin = dy / step;
+
+        s32 x = fromX;
+        s32 y = fromY;
+        for (s32 i = 0; i < step; i++)
+        {
+            x += xin;
+            y += yin;
+
+            setCirclePixel(x, y, r, e->clone());
+        }
+
+        delete e;
     }
 };
 
-World sandWorld = World(globalVariables.chunkSize, globalVariables.chunkSize);
+World sandWorld = World();
 
 #endif // WORLD_CPP

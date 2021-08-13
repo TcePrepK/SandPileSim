@@ -16,7 +16,9 @@ public:
 
     virtual u32 getColor() { return 0xff0000; }
 
-    virtual POINT update(s32 x, s32 y) { return {x, y}; }
+    virtual Element *clone() { return new Element(id, color); }
+
+    virtual Vector update(s32 x, s32 y) { return Vector(x, y); }
 
     virtual b32 isDynamic() { return true; }
 };

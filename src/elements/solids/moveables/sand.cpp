@@ -3,7 +3,7 @@
 class Sand : public Solid
 {
 public:
-    Sand() : Solid(mat_id_sand, getColor()) {}
+    Sand() : Solid(SAND, getColor()) {}
 
     u32 getColor() { return generateColor(); }
 
@@ -17,26 +17,28 @@ public:
         return rgbaToHex(red, green, blue, alpha);
     }
 
-    POINT update(s32 x, s32 y)
+    Element *clone() { return new Sand(); }
+
+    Vector update(s32 x, s32 y)
     {
         // Element *element = sandWorld.getPixel(x, y + 1);
-        if (sandWorld.getPixel(x, y + 1)->id == mat_id_empty)
-            return {x, y + 1};
-        // if (sandWorld.getPixel(x + 1, y + 1) == mat_id_empty)
-        //     return Vector(x + 1, y + 1);
-        // if (sandWorld.getPixel(x - 1, y + 1) == mat_id_empty)
-        //     return Vector(x - 1, y + 1);
+        if (sandWorld.getPixel(x, y + 1) == nullptr)
+            return Vector(x, y + 1);
+        if (sandWorld.getPixel(x + 1, y + 1) == nullptr)
+            return Vector(x + 1, y + 1);
+        if (sandWorld.getPixel(x - 1, y + 1) == nullptr)
+            return Vector(x - 1, y + 1);
 
-        return {x, y};
+        return Vector(x, y);
     }
 
-    // POINT simulateSand(s32 x, s32 y, s32 id)
+    // Vector simulateSand(s32 x, s32 y, s32 id)
     // {
     //     s32 dir = randomVal(0, 1) ? 1 : -1;
-    //     POINT pos = {x, y};
-    //     POINT B = {x, y + 1};
-    //     POINT BL = {x + dir, y + 1};
-    //     POINT BR = {x - dir, y + 1};
+    //     Vector pos = {x, y};
+    //     Vector B = {x, y + 1};
+    //     Vector BL = {x + dir, y + 1};
+    //     Vector BR = {x - dir, y + 1};
     //     if (isMoveFree(B, id))
     //     {
     //         return B;
@@ -53,7 +55,7 @@ public:
     //     return pos;
     // }
 
-    // POINT update(s32 x, s32 y)
+    // Vector update(s32 x, s32 y)
     // {
     //     s32 id = mat_id_sand;
     //     if (isSurrounded(x, y, id))
@@ -65,11 +67,11 @@ public:
     //     s32 currentFall = 0;
     //     s32 currentSpread = 0;
 
-    //     POINT pos = {x, y};
+    //     Vector pos = {x, y};
 
     //     for (s32 j = 1; j <= fallRate; j++)
     //     {
-    //         POINT B = {x, y + j};
+    //         Vector B = {x, y + j};
     //         if (!isAir(B))
     //             break;
     //         currentFall = j;
@@ -77,16 +79,16 @@ public:
 
     //     if (currentFall == fallRate)
     //     {
-    //         POINT g = {x, y + fallRate};
+    //         Vector g = {x, y + fallRate};
     //         swapData(pos, g);
     //         return g;
     //     }
 
-    //     POINT currentP = {x, y + currentFall};
+    //     Vector currentP = {x, y + currentFall};
     //     s32 currentLoop = 0;
     //     while (currentLoop++ < spreadRate + fallRate)
     //     {
-    //         POINT nextP = simulateSand(currentP.x, currentP.y, id);
+    //         Vector nextP = simulateSand(currentP.x, currentP.y, id);
     //         currentSpread = nextP.x - x;
     //         currentFall = nextP.y - y;
 
@@ -98,7 +100,7 @@ public:
     //         currentP = nextP;
     //     }
 
-    //     POINT lastP = {x + currentSpread, y + currentFall};
+    //     Vector lastP = {x + currentSpread, y + currentFall};
     //     swapData(pos, lastP);
     //     return lastP;
     // }

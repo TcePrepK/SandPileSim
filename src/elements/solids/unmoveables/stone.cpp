@@ -1,7 +1,9 @@
+#define STONE 3
+
 class Stone : public Solid
 {
 public:
-    Stone() : Solid(mat_id_stone, getColor()) {}
+    Stone() : Solid(STONE, getColor()) {}
 
     u32 getColor()
     {
@@ -12,4 +14,6 @@ public:
         s32 alpha = 255;
         return rgbaToHex(red, green, blue, alpha);
     }
+
+    Element *clone() { return new Stone(); }
 };
