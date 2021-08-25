@@ -36,7 +36,7 @@ public:
 			auto change = changes[i];
 			Chunk* toC = get<0>(change);
 			Vector to = get<2>(change);
-			if (toC->getPixel(to.x, to.y)) {
+			if (toC->getPixel(to.x, to.y) != nullptr) {
 				changes[i] = changes.back();
 				changes.pop_back();
 				i--;
@@ -45,7 +45,7 @@ public:
 
 		while (changes.size() != 0) {
 			s32 r = rand() % changes.size();
-			auto change = changes[r];
+			auto& change = changes[r];
 
 			Chunk* toC = get<0>(change);
 			Vector from = get<1>(change);

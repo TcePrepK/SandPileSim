@@ -43,15 +43,13 @@ public:
 					e->updatedThisFrame = true;
 
 					Vector newPos = e->update(pos.x, pos.y);
-					// Chunk* toChunk = getChunkWithTiles(newPos.x, newPos.y);
-					// Vector to = newPos - Vector(toChunk->tileX, toChunk->tileY);
-
-					/*
 					if (newPos.x == pos.x && newPos.y == pos.y)
 						continue;
 
+					Chunk* toChunk = getChunk(newPos.x, newPos.y);
+					Vector to = newPos - Vector(toChunk->tileX, toChunk->tileY);
+
 					chunk->movePixel(toChunk, from, to);
-					*/
 				}
 			}
 		}
