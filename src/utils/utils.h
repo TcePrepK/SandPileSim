@@ -20,6 +20,7 @@ using namespace std;
 #include "rect.h"
 #include "variables.h"
 #include "renderer.h"
+#include "pairHash.h"
 #include "../elements/element.h"
 #include "../core/gui.h"
 

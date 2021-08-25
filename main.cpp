@@ -20,6 +20,9 @@ int main(int argc, char** argv) {
 	// GUIs
 	generateAllGUIs();
 
+	// Background
+	clearScreen(0x000000);
+
 	// FPS Things
 	clock_t current_ticks, delta_ticks;
 	s64 fps = 0;

@@ -150,8 +150,9 @@
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chunk.h" />
-    <ClInclude Include="gui.h" />
+    <ClInclude Include="src\core\chunk.h" />
+    <ClInclude Include="src\core\gui.h" />
+    <ClInclude Include="src\core\world.h" />
     <ClInclude Include="src\elementRegistry.h" />
     <ClInclude Include="src\elements\element.h" />
     <ClInclude Include="src\elements\liquids\liquid.h" />
@@ -160,13 +161,13 @@
     <ClInclude Include="src\elements\solids\solid.h" />
     <ClInclude Include="src\elements\solids\unmoveables\stone.h" />
     <ClInclude Include="src\utils\maths.h" />
+    <ClInclude Include="src\utils\pairHash.h" />
     <ClInclude Include="src\utils\rect.h" />
     <ClInclude Include="src\utils\renderer.h" />
     <ClInclude Include="src\utils\types.h" />
     <ClInclude Include="src\utils\utils.h" />
     <ClInclude Include="src\utils\variables.h" />
     <ClInclude Include="src\utils\vector.h" />
-    <ClInclude Include="world.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

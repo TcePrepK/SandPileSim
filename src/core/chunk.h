@@ -13,7 +13,7 @@ public:
 	vector<tuple<Chunk*, Vector, Vector>> changes;
 
 	Chunk(s32 x, s32 y, u32 width, u32 height) : x(x), y(y), tileX(x* width), tileY(y* height), width(width), height(height) {
-		grid = new Element * [(s32)(width * height)]{};
+		grid = new Element * [width * height]{};
 	}
 
 	~Chunk() {
@@ -41,7 +41,6 @@ public:
 				changes.pop_back();
 				i--;
 			}
-
 		}
 
 		while (changes.size() != 0) {

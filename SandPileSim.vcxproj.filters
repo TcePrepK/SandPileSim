@@ -47,15 +47,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="chunk.h">
-      <Filter>Header Files\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="gui.h">
-      <Filter>Header Files\src\core</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Header Files\src\core</Filter>
-    </ClInclude>
     <ClInclude Include="src\elements\element.h">
       <Filter>Header Files\src\elements</Filter>
     </ClInclude>
@@ -96,6 +87,18 @@
       <Filter>Header Files\src\utils</Filter>
     </ClInclude>
     <ClInclude Include="src\utils\vector.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\chunk.h">
+      <Filter>Header Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\gui.h">
+      <Filter>Header Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\world.h">
+      <Filter>Header Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\pairHash.h">
       <Filter>Header Files\src\utils</Filter>
     </ClInclude>
   </ItemGroup>

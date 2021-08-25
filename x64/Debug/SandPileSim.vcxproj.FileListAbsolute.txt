@@ -1,2 +1,0 @@
-C:\Users\asard\Documents\SandPileSim\x64\Debug\SandPileSim.exe
-C:\Users\asard\Documents\SandPileSim\x64\Debug\SandPileSim.pdb

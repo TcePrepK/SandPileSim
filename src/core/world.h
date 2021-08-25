@@ -5,7 +5,7 @@ class World {
 public:
 	s32 chunkWidth = 64;
 	s32 chunkHeight = 64;
-	unordered_map<pair<s32, s32>, Chunk*> chunks;
+	unordered_map<pair<s32, s32>, Chunk*, pair_hash> chunks;
 	vector<Chunk*> chunkList;
 
 	World() {}
@@ -31,10 +31,9 @@ public:
 
 	void update() {
 		prepareUpdate();
-		b32 reverse = globalVariables.currentFrame % 2;
 		for (Chunk* chunk : chunkList) {
-			for (s32 offX = reverse ? 0 : chunkWidth - 1; reverse ? offX < chunkWidth : offX >= 0; reverse ? offX++ : offX--) {
-				for (s32 offY = reverse ? 0 : chunkHeight - 1; reverse ? offY < chunkHeight : offY >= 0; reverse ? offY++ : offY--) {
+			for (s32 offX = 0; offX < chunkWidth; offX++) {
+				for (s32 offY = 0; offY < chunkHeight; offY++) {
 					Vector from = { offX, offY };
 					Vector pos = chunk->getIndex(offX, offY);
 
@@ -75,22 +74,23 @@ public:
 
 	// HELPERS
 
+	pair<s32, s32> getChunkLocation(s32 x, s32 y) {
+		return { floor((f32)x / (f32)chunkWidth), floor((f32)y / (f32)chunkHeight) };
+	}
+
 	Chunk* createChunk(pair<s32, s32> location) {
 		Chunk* c = new Chunk(location.first, location.second, chunkWidth, chunkHeight);
 
-		chunks[location] = c;
+		chunks.insert({ location, c });
 		chunkList.push_back(c);
 
 		return c;
 	}
 
-	pair<s32, s32> getChunkLocation(s32 x, s32 y) {
-		return { floor((f32)x / (f32)chunkWidth), floor((f32)y / (f32)chunkHeight) };
-	}
-
-	Chunk* getChunk(s32 x, s32 y) {
-		pair<s32, s32> location = getChunkLocation(x, y);
-		return getChunk(location);
+	Chunk* getChunkDirect(pair<s32, s32> location) {
+		auto itr = chunks.find(location);
+		auto end = chunks.end();
+		return itr != end ? itr->second : nullptr;
 	}
 
 	Chunk* getChunk(pair<s32, s32> location) {
@@ -98,10 +98,9 @@ public:
 		return chunk == nullptr ? createChunk(location) : chunk;
 	}
 
-	Chunk* getChunkDirect(pair<s32, s32> location) {
-		auto a = chunks[location];
-		if (chunks.find(location) == chunks.end()) return nullptr;
-		return chunks[location];
+	Chunk* getChunk(s32 x, s32 y) {
+		pair<s32, s32> location = getChunkLocation(x, y);
+		return getChunk(location);
 	}
 
 	Element* getPixel(s32 x, s32 y) {
