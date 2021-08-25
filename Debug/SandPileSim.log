@@ -1,0 +1,5 @@
+﻿  main.cpp
+C:\Users\asard\Documents\SandPileSim\src\utils\vector.h(54,11): warning C4244: 'initializing': conversion from 'double' to 's32', possible loss of data
+C:\Users\asard\Documents\SandPileSim\src\core\gui.h(49,23): warning C4018: '<': signed/unsigned mismatch
+C:\Users\asard\Documents\SandPileSim\src\core\world.h(16,27): warning C4018: '<': signed/unsigned mismatch
+  SandPileSim.vcxproj -> C:\Users\asard\Documents\SandPileSim\Debug\SandPileSim.exe

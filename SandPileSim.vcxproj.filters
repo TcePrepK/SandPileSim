@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files\src">
+      <UniqueIdentifier>{c55a65d0-c481-4a35-9387-22a42288d032}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\utils">
+      <UniqueIdentifier>{284a5330-6b11-455a-bb12-d61c5cbcafe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\core">
+      <UniqueIdentifier>{ebfa4628-13b0-44fc-89b6-aea5547cf0ff}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\elements">
+      <UniqueIdentifier>{62e2126a-aac6-4616-a845-4c75ba5ca0cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\elements\gasses">
+      <UniqueIdentifier>{3ef6d79a-e6ff-40f4-b87a-b8788ba1697f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\elements\solids">
+      <UniqueIdentifier>{15da7570-407b-4dd6-928b-296d4103e6b1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\elements\solids\moveables">
+      <UniqueIdentifier>{a79838e5-85e9-4b3c-8b4b-e001eae941d3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\elements\solids\unmoveables">
+      <UniqueIdentifier>{8ce6d041-28f5-4e98-8ea7-471ef733ad95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\src\elements\liquids">
+      <UniqueIdentifier>{8d8ade89-fccd-4179-af40-650d8a06e1b2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="chunk.h">
+      <Filter>Header Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="gui.h">
+      <Filter>Header Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Header Files\src\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elements\element.h">
+      <Filter>Header Files\src\elements</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elements\liquids\liquid.h">
+      <Filter>Header Files\src\elements\liquids</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elements\liquids\water.h">
+      <Filter>Header Files\src\elements\liquids</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elements\solids\solid.h">
+      <Filter>Header Files\src\elements\solids</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elements\solids\moveables\sand.h">
+      <Filter>Header Files\src\elements\solids\moveables</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elements\solids\unmoveables\stone.h">
+      <Filter>Header Files\src\elements\solids\unmoveables</Filter>
+    </ClInclude>
+    <ClInclude Include="src\elementRegistry.h">
+      <Filter>Header Files\src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\utils.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\variables.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\maths.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\rect.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\renderer.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\types.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+    <ClInclude Include="src\utils\vector.h">
+      <Filter>Header Files\src\utils</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

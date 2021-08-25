@@ -1,0 +1,2 @@
+﻿  main.cpp
+C:\Users\asard\Documents\SandPileSim\main.cpp(1,10): fatal error C1083: Cannot open include file: './src/utils/utils.cpp': No such file or directory
