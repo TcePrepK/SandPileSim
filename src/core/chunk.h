@@ -13,22 +13,11 @@ public:
 	vector<tuple<Chunk*, Vector, Vector>> changes;
 
 	Chunk(s32 x, s32 y, u32 width, u32 height) : x(x), y(y), tileX(x* width), tileY(y* height), width(width), height(height) {
-		grid = new Element * [width * height]{};
+		grid = new Element * [(s32)(width * height)]{};
 	}
 
 	~Chunk() {
 		delete[] grid;
-	}
-
-	void prepareUpdate() {
-		for (u32 i = 0; i < width; i++) {
-			for (u32 j = 0; j < height; j++) {
-				Element* e = getPixel(i, j);
-				if (e != nullptr) {
-					e->updatedThisFrame = false;
-				}
-			}
-		}
 	}
 
 	void updateChanges() {

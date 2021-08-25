@@ -74,7 +74,7 @@ int main(int argc, char** argv) {
 			s32 id = globalVariables.currentMatID;
 			if (id != STONE) {
 				if (globalVariables.currentFrame % 10 == 0) {
-					world.setCirclePixel(tile.x, tile.y, 10, create_particle(id));
+					world.setRectPixel(tile.x, tile.y, 10, create_particle(id));
 				}
 			} else {
 				world.setCircleLine(oldTile.x, oldTile.y, tile.x, tile.y, 2, create_particle(id));

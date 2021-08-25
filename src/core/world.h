@@ -13,40 +13,33 @@ public:
 	void prepareUpdate() {
 		for (s32 i = 0; i < chunkList.size(); i++) {
 			Chunk* chunk = chunkList[i];
+			if (chunk->filledPixelAmount != 0) continue;
+
 			pair<s32, s32> location = getChunkLocation(chunk->x, chunk->y);
+			chunks.erase(location);
+			chunkList.erase(chunkList.begin() + i);
+			i--;
 
-			if (chunk->filledPixelAmount == 0) {
-				chunks.erase(location);
-				chunkList[i] = chunkList.back();
-				chunkList.pop_back();
-				i--;
-
-				delete chunk;
-				continue;
-			}
-
-			chunk->prepareUpdate();
+			delete chunk;
 		}
 	}
 
 	void update() {
 		prepareUpdate();
-		for (Chunk* chunk : chunkList) {
+		// for (Chunk* chunk : chunkList) {
+		for (s32 i = 0; i < chunkList.size(); i++) {
+			Chunk* chunk = chunkList[i];
 			for (s32 offX = 0; offX < chunkWidth; offX++) {
 				for (s32 offY = 0; offY < chunkHeight; offY++) {
-					Vector from = { offX, offY };
-					Vector pos = chunk->getIndex(offX, offY);
-
 					Element* e = chunk->getPixel(offX, offY);
-					if (e == nullptr || e->updatedThisFrame) continue;
+					if (e == nullptr) continue;
 
-					e->updatedThisFrame = true;
-
+					Vector pos = chunk->getIndex(offX, offY);
 					Vector newPos = e->update(pos.x, pos.y);
-					if (newPos.x == pos.x && newPos.y == pos.y)
-						continue;
+					if (newPos.x == pos.x && newPos.y == pos.y) continue;
 
 					Chunk* toChunk = getChunk(newPos.x, newPos.y);
+					Vector from = { offX, offY };
 					Vector to = newPos - Vector(toChunk->tileX, toChunk->tileY);
 
 					chunk->movePixel(toChunk, from, to);
@@ -121,6 +114,14 @@ public:
 		Chunk* chunk = getChunk(location);
 		Vector pos = chunk->getWorldIndex(x, y);
 		chunk->setPixel(pos.x, pos.y, element);
+	}
+
+	void setRectPixel(s32 x, s32 y, s32 r, Element* e) {
+		for (s32 offX = -r; offX < r; offX++) {
+			for (s32 offY = -r; offY < r; offY++) {
+				setPixel(x + offX, y + offY, e->clone());
+			}
+		}
 	}
 
 	void setCirclePixel(s32 x, s32 y, s32 r, Element* e) {
