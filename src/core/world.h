@@ -26,9 +26,9 @@ public:
 
 	void update() {
 		prepareUpdate();
-		// for (Chunk* chunk : chunkList) {
-		for (s32 i = 0; i < chunkList.size(); i++) {
-			Chunk* chunk = chunkList[i];
+		for (Chunk* chunk : chunkList) {
+			// for (s32 i = 0; i < chunkList.size(); i++) {
+				// Chunk* chunk = chunkList[i];
 			for (s32 offX = 0; offX < chunkWidth; offX++) {
 				for (s32 offY = 0; offY < chunkHeight; offY++) {
 					Element* e = chunk->getPixel(offX, offY);
