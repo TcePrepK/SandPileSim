@@ -3,9 +3,28 @@
 
 void eventSDL(SDL_Event event) {
 	switch (event.type) {
-	case SDL_QUIT:
+	case SDL_QUIT: {
 		globalVariables.gameIsRunning = false;
 		break;
+	}
+	case SDL_MOUSEBUTTONDOWN: {
+		if (event.button.button == SDL_BUTTON_LEFT) {
+			s32 id = testForGUIs();
+			if (id != -1) globalVariables.currentMatID = id;
+			else globalVariables.holdingLeft = true;
+		} else if (event.button.button == SDL_BUTTON_RIGHT) {
+			// Vector tile = mouseToTile(globalVariables.mouse);
+			// Vector p = {tile.x, tile.y};
+
+			// globalVariables.shower.id = globalVariables.currentMatID;
+			// globalVariables.shower.pos = p;
+		}
+		break;
+	}
+	case SDL_MOUSEBUTTONUP: {
+		globalVariables.holdingLeft = false;
+		break;
+	}
 	default:
 		break;
 	}
@@ -95,34 +114,3 @@ int main(int argc, char** argv) {
 	globalVariables.destroy();
 	return 0;
 }
-
-// 	case WM_LBUTTONDOWN:
-// 	{
-// 		s32 id = testForGUIs();
-// 		if (id != -1)
-// 		{
-// 			globalVariables.currentMatID = id;
-// 		}
-// 		else
-// 		{
-// 			globalVariables.holdingLeft = true;
-// 		}
-// 	}
-// 	break;
-
-// 	case WM_LBUTTONUP:
-// 	{
-// 		globalVariables.holdingLeft = false;
-// 	}
-// 	break;
-
-// 	case WM_RBUTTONDOWN:
-// 	{
-// 		Vector tile = mouseToTile(globalVariables.mouse);
-// 		POINT p = {tile.x, tile.y};
-
-// 		globalVariables.shower.id = globalVariables.currentMatID;
-// 		globalVariables.shower.pos = p;
-// 	}
-// 	break;
-// 	}
