@@ -64,7 +64,7 @@ public:
 		if (filledPixelAmount > 0) {
 			strokeRect(tileX, tileY, width, height, 0x00ff00);
 		} else {
-			strokeRect(tileX, tileY, width, height, 0x0000000);
+			strokeRect(tileX, tileY, width, height, 0x000000);
 		}
 	}
 

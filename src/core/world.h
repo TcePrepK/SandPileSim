@@ -12,23 +12,21 @@ public:
 
 	void prepareUpdate() {
 		for (s32 i = 0; i < chunkList.size(); i++) {
-			Chunk* chunk = chunkList[i];
+			Chunk* chunk = chunkList.at(i);
 			if (chunk->filledPixelAmount != 0) continue;
 
 			pair<s32, s32> location = getChunkLocation(chunk->x, chunk->y);
-			chunks.erase(location);
-			chunkList.erase(chunkList.begin() + i);
-			i--;
+			// chunks.erase(location);
+			// chunkList.erase(chunkList.begin() + i);
+			// i--;
 
-			delete chunk;
+			// delete chunk;
 		}
 	}
 
 	void update() {
 		prepareUpdate();
 		for (Chunk* chunk : chunkList) {
-			// for (s32 i = 0; i < chunkList.size(); i++) {
-				// Chunk* chunk = chunkList[i];
 			for (s32 offX = 0; offX < chunkWidth; offX++) {
 				for (s32 offY = 0; offY < chunkHeight; offY++) {
 					Element* e = chunk->getPixel(offX, offY);
@@ -39,6 +37,9 @@ public:
 					if (newPos.x == pos.x && newPos.y == pos.y) continue;
 
 					Chunk* toChunk = getChunk(newPos.x, newPos.y);
+					if (toChunk == nullptr) continue;
+					if (toChunk != chunk) awakeChunk(toChunk);
+
 					Vector from = { offX, offY };
 					Vector to = newPos - Vector(toChunk->tileX, toChunk->tileY);
 
@@ -46,7 +47,6 @@ public:
 				}
 			}
 		}
-
 		for (Chunk* chunk : chunkList) {
 			chunk->updateChanges();
 		}
@@ -65,6 +65,19 @@ public:
 
 	// HELPERS
 
+	bool outBounds(s32 x, s32 y) {
+		return (x < 0 || y < 0 || x > 7 || y > 7);
+	}
+
+	void awakeChunkDirect(Chunk* chunk) {
+		chunkList.push_back(chunk);
+	}
+
+	void awakeChunk(Chunk* chunk) {
+		if (find(chunkList.begin(), chunkList.end(), chunk) != chunkList.end()) return;
+		awakeChunkDirect(chunk);
+	}
+
 	pair<s32, s32> getChunkLocation(s32 x, s32 y) {
 		return { floor((f32)x / (f32)chunkWidth), floor((f32)y / (f32)chunkHeight) };
 	}
@@ -73,7 +86,7 @@ public:
 		Chunk* c = new Chunk(location.first, location.second, chunkWidth, chunkHeight);
 
 		chunks.insert({ location, c });
-		chunkList.push_back(c);
+		awakeChunkDirect(c);
 
 		return c;
 	}
@@ -84,7 +97,15 @@ public:
 		return itr != end ? itr->second : nullptr;
 	}
 
+	Chunk* getChunkDirect(s32 x, s32 y) {
+		pair<s32, s32> location = getChunkLocation(x, y);
+		return getChunkDirect(location);
+	}
+
 	Chunk* getChunk(pair<s32, s32> location) {
+		s32 x = location.first;
+		s32 y = location.second;
+		if (outBounds(x, y)) return nullptr;
 		Chunk* chunk = getChunkDirect(location);
 		return chunk == nullptr ? createChunk(location) : chunk;
 	}
@@ -112,6 +133,8 @@ public:
 	void setPixel(s32 x, s32 y, Element* element) {
 		pair<s32, s32> location = getChunkLocation(x, y);
 		Chunk* chunk = getChunk(location);
+		if (chunk == nullptr) return;
+		awakeChunk(chunk);
 		Vector pos = chunk->getWorldIndex(x, y);
 		chunk->setPixel(pos.x, pos.y, element);
 	}
